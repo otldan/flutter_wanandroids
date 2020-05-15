@@ -1,7 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterwanandroids/common/application.dart';
+import 'package:flutterwanandroids/common/event/login_event.dart';
 import 'package:flutterwanandroids/data/data_utils.dart';
+import 'package:flutterwanandroids/model/Login/base_login_data.dart';
+import 'package:flutterwanandroids/model/Login/login_data.dart';
+import 'package:flutterwanandroids/model/base_response.dart';
 import 'package:flutterwanandroids/res/colours.dart';
+import 'package:flutterwanandroids/routers/routes.dart';
 import 'package:flutterwanandroids/utils/tool_utils.dart';
 
 /**
@@ -213,7 +219,7 @@ class _loginPageState extends State<LoginPage> {
           color: Theme.of(context).primaryColor,
           child: Text('注册',style: TextStyle(fontSize: 16),),
           onPressed: (){
-
+            Application.router.navigateTo(context, Routers.register);
           },
         ),
         SizedBox(
@@ -225,7 +231,7 @@ class _loginPageState extends State<LoginPage> {
           child: Text('登录',style: TextStyle(fontSize: 16),),
           onPressed: (){
             if (_signInFormKey.currentState.validate()) {
-              ToolUtils.showToast(msg:'登录');
+              doLogin();
             }
           },
         ),
@@ -240,9 +246,25 @@ class _loginPageState extends State<LoginPage> {
     });
   }
 
-
+  /**
+   * 登录
+   */
   void doLogin() async{
     _signInFormKey.currentState.save();
+    BaseResponseBody<LoginData> baseResponseBody =await dataUtils.getLoginData(userName, passWord, context);
+    print('${baseResponseBody.errorMsg}${baseResponseBody.errorCode}');
+    if (baseResponseBody.errorCode == 0) {
+    LoginData loginData =  baseResponseBody.data;
+    dataUtils.setUserName(loginData.username);
+    dataUtils.setLoginState(true);
+    Application.eventBus.fire(new LoginEvent(loginData));
+    ToolUtils.showToast(msg: "登录成功");
+    //退出当前页面
+    Navigator.of(context).pop();
+    }
+
+
+
 
 }
 }

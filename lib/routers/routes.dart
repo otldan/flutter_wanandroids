@@ -31,9 +31,10 @@ class Routers{
         print("router not found");
       }
     );
-
+    ;
     routers.define(root, handler: homeHandler);
     routers.define(login, handler: loginHandler);
+    routers.define(register, handler: registerHandler);
   }
 
 

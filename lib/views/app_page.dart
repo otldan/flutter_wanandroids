@@ -1,30 +1,25 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutterwanandroids/common/MyIcons.dart';
-import 'package:flutterwanandroids/common/provider/provider_chage_notifiler.dart';
-import 'package:flutterwanandroids/data/data_utils.dart';
 import 'package:flutterwanandroids/utils/tool_utils.dart';
 import 'package:flutterwanandroids/views/drawer/drawer_page.dart';
 import 'package:flutterwanandroids/views/home/home_page.dart';
-import 'package:provider/provider.dart';
+import 'knowledge/knowledge_page.dart';
 
 class AppPage extends StatefulWidget{
   @override
-  _AppPageState createState() {
-    // TODO: implement createState
-    return _AppPageState();
-  }
+  _AppPageState createState() =>_AppPageState();
 
 }
 
 class _AppPageState extends State<AppPage> {
   //存放底部导航栏对应的widget
-  List<Widget> _list = [];
+  List<Widget> _list =  List();
+  String appBarTitle;
   //当前tab
   int _currentIndex = 0;
-
+  final pageController = PageController();
   List tabData = [
     {'text':'首页','icon':Icon(Icons.home)},
     {'text': '知识体系', 'icon': Icon(MyIcons.knowledge)},
@@ -33,9 +28,9 @@ class _AppPageState extends State<AppPage> {
     {'text': '项目', 'icon': Icon(Icons.android)},
   ];
   List<BottomNavigationBarItem> _myTabs =[];
-  String appBarTitle;
+
   DateTime _lastPressedAt;//上次点击时间
-  final pageController = PageController();
+
 
   @override
   void initState(){
@@ -51,10 +46,17 @@ class _AppPageState extends State<AppPage> {
 
     _list
       ..add(HomePage())
-      ..add(HomePage())
-      ..add(HomePage())
-      ..add(HomePage());
+      ..add(KnowledgePage())
+      ..add(KnowledgePage())
+      ..add(KnowledgePage())
+      ..add(KnowledgePage());
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -100,7 +102,8 @@ void _itemTapped(int index){
     }
 }
 renderAppBar(BuildContext context,Widget widget,int index){
-    if (index != 0 || index != 4) {
+    print('$index位置');
+    if (index != 0 && index != 4) {
       return AppBar(
         leading: Builder(
           builder: (context){
@@ -108,7 +111,6 @@ renderAppBar(BuildContext context,Widget widget,int index){
               icon: Icon(Icons.menu,color: Colors.white),
               onPressed: () {
                 /// 打开侧边栏 使用 Builder( builder: (context) 保证获取到 Scaffold  context 可以正常打开侧边栏
-                print("点击打开侧边栏");
                 Scaffold.of(context).openDrawer();
               });
           },

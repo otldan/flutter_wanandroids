@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutterwanandroids/common/MyIcons.dart';
 import 'package:flutterwanandroids/common/application.dart';
+import 'package:flutterwanandroids/common/event/login_event.dart';
 import 'package:flutterwanandroids/data/data_utils.dart';
+import 'package:flutterwanandroids/model/Login/login_data.dart';
 import 'package:flutterwanandroids/res/colours.dart';
 import 'package:flutterwanandroids/routers/routes.dart';
 import 'package:flutterwanandroids/utils/tool_utils.dart';
@@ -31,11 +34,23 @@ class _DrawerPageState extends State<DrawerPage> {
   final TextStyle textStyle =
       TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
   bool isLogin = false; //是否登录
+  LoginData loginData;
   @override
   void initState() {
     super.initState();
     isLogin = dataUtils.hasLogin() ;
-    if (isLogin) {}
+    if (isLogin) {
+
+    }
+    //登录
+    Application.eventBus.on<LoginEvent>().listen((event){
+      if (this.mounted) {
+        setState(() {
+          isLogin = true;
+          loginData = event.loginData;
+        });
+      }
+    });
   }
 
   @override
@@ -117,6 +132,108 @@ class _DrawerPageState extends State<DrawerPage> {
           ),
           onTap: () {
             checkLoginGoPage(false,Routers.shareArticlePage);
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.format_list_bulleted,size: 27.0,),
+          title: Text('常用网站',
+            style: textStyle,),
+          onTap: (){
+            checkLoginGoPage(false,Routers.commonWebPage);
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            MyIcons.collection,
+            size: 27.0,
+          ),
+          title: Text(
+            '我的收藏',
+            style: textStyle,
+          ),
+          onTap: () {
+            checkLoginGoPage(true,Routers.collectItemPage);
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.question_answer,
+            size: 27.0,
+          ),
+          title: Text(
+            '问答',
+            style: textStyle,
+          ),
+          onTap: () {
+            checkLoginGoPage(false,Routers.questionAnswerPage);
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            MyIcons.todo,
+            size: 27.0,
+          ),
+          title: Text(
+            'TODO',
+            style: textStyle,
+          ),
+          onTap: () {
+            checkLoginGoPage(true,Routers.todoPage);
+          },
+        ),
+        new Divider(),
+        ListTile(
+          leading: Icon(
+            MyIcons.rank,
+            size: 27.0,
+          ),
+          title: Text(
+            '积分排行榜',
+            style: textStyle,
+          ),
+          onTap: () {
+            checkLoginGoPage(false,Routers.coinRankPage);
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            MyIcons.coin,
+            size: 27.0,
+          ),
+          title: Text(
+            '我的积分',
+            style: textStyle,
+          ),
+          onTap: () {
+            checkLoginGoPage(true,Routers.userCoinPage);
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.color_lens,
+            size: 27.0,
+          ),
+          title: Text(
+            '主题',
+            style: textStyle,
+          ),
+          onTap: () {
+            //pushPage(context, SearchPage(), pageName: "SearchPage");
+            ///显示主题 dialog
+//            buildSimpleDialog(context);
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.settings,
+            size: 27.0,
+          ),
+          title: Text(
+            '设置',
+            style: textStyle,
+          ),
+          onTap: () {
+            checkLoginGoPage(false,Routers.settingPage);
           },
         ),
 
